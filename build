@@ -1,0 +1,5 @@
+#!/bin/sh
+cabal new-build --ghc-options "-O2" # -dynamic
+hsweather=$(find ./ -name 'hsweather' -type f -perm -u+x)
+strip $hsweather
+upx gen $hsweather

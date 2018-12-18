@@ -17,7 +17,7 @@ extra-source-files:  CHANGELOG.md
 
 executable hsweather
   main-is:             Main.hs
-  ghc-options:         -O2 -Wall -Werror
+  ghc-options:         -Wall -Werror
   -- other-modules:
   -- other-extensions:
   build-depends:       base ^>=4.11.1.0

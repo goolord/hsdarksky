@@ -11,16 +11,15 @@ import Data.Aeson.Lens
 import System.Environment
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
--- import qualified Data.Aeson as AE
 
 main :: IO ()
 main = do 
   [api, lat, long] <- getArgs
   let opts = defaults & param "units" .~ ["auto"]
   r <- getWith opts
-        $ "https://api.darksky.net/forecast/" 
-        <> api <> "/" 
-        <> lat <> "," 
+        $ "https://api.darksky.net/forecast/"
+        <> api <> "/"
+        <> lat <> ","
         <> long
   let temp :: Double
       (Just (Success temp)) = fromJSON <$> r ^? responseBody . key "currently" . key "temperature"
@@ -30,6 +29,7 @@ main = do
       icon = iconEnc icon'
   T.putStr $ icon <> " " <> tempEnc temp <> "°"
   pure ()
+{-# INLINE main #-}
 
 tempEnc :: Double -> Text
 tempEnc temp = tshow $ (round temp :: Int)
@@ -42,13 +42,14 @@ iconEnc "rain"                = "\61673" -- 
 iconEnc "snow"                = "\64151" -- 流
 iconEnc "sleet"               = "\58285" --  
 iconEnc "wind"                = "\61912" --  
-iconEnc "fog"                 = "\64144" -- 敖 
+iconEnc "fog"                 = "\64144" -- 敖
 iconEnc "cloudy"              = "\58130" --  
-iconEnc "partly-cloudy-day"   = "\64148" -- 杖 
-iconEnc "partly-cloudy-night" = "\58233" -- 
+iconEnc "partly-cloudy-day"   = "\64148" -- 杖
+iconEnc "partly-cloudy-night" = "\58233" --  
 iconEnc _ = ""
 {-# INLINE iconEnc #-}
 
 tshow :: Show a => a -> Text
 tshow = T.pack . show
-{-# INLINE tshow #-}
+{-# SPECIALIZE 
+  tshow :: Double -> Text #-}
